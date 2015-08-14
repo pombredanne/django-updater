@@ -1,7 +1,8 @@
 .. image:: https://djangoupdater.com/static/images/logo.png
 
 .. image:: https://badge.fury.io/py/django-updater.png
-.. image:: https://travis-ci.org/jayfk/django-updater.png?branch=master
+.. image:: https://travis-ci.org/jayfk/django-updater.svg?branch=master
+    :target: https://travis-ci.org/jayfk/django-updater
 
 Django Updater helps you to keep your Django installation up to date. It warns you when a new security related release comes out and when your Django version hits end of life.
 
