@@ -1,0 +1,14 @@
+
+***********************************************************
+*               Security Issues                           * {% for package in security_issues %}
+***********************************************************
+Package: {{ package.package }}
+Used Version: {{ package.used_version }}
+{% if package.end_of_life %}{{ package.package }} {{ package.used_version }} is no longer supported and won't receive security fixes.{% endif %}{% for release in package.security_releases %}
+Release: {{ release.version }}
+URL: {{ release.url }}
+Fixes: {% for fix in release.fixes %}
+  - {{ fix }}{% endfor %}{% endfor %}
+
+***********************************************************
+{% endfor %}
