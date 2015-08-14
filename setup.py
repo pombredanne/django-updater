@@ -30,7 +30,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 setup(
     name='django-updater',
     version=version,
-    description="""Your project description goes here""",
+    description="""Helps you to keep your Django installation up to date""",
     long_description=readme + '\n\n' + history,
     author='Jannis Gebauer',
     author_email='ja.geb@me.com',
