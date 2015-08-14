@@ -1,0 +1,10 @@
+{% spaceless %}
+{% if security_issues %}Your site {{ site }} has pending security updates. {% if security_issues|length > 1 %}Affected packages are {% for package in security_issues %}{{ package.package }}{% if forloop.revcounter > 2 %}, {% elif forloop.revcounter == 2 %} and {% endif %}{% endfor %}.{% else %}The affected package is {{ security_issues.0.package }}.{% endif %}
+{% include "security_issues.txt" %}{% endif %}
+{% if updates %}{% if security_issues %}Additionally, there are {{ updates|length }} updates availble:{% else %}There are {{ updates|length }} updates available on {{ site }}:{% endif %}
+{% for package in updates %}
+{% if package.latest_version != package.used_version %}{{ package.package }}: {{ package.used_version }} -> {{ package.latest_version }}{% endif %}{% endfor %}{% endif %}
+
+-----------------------------
+You are receiving this mail because you have installed Django Updater on {{ site }}.
+{% endspaceless %}
