@@ -1,6 +1,7 @@
 .. image:: https://djangoupdater.com/static/images/logo.png
 
 .. image:: https://badge.fury.io/py/django-updater.png
+    :target: https://pypi.python.org/pypi/django-updater
 .. image:: https://travis-ci.org/jayfk/django-updater.svg?branch=master
     :target: https://travis-ci.org/jayfk/django-updater
 
