@@ -208,20 +208,18 @@ class PackageTestCase(TestCase):
 
         # todo add more tests in case of failures
 
-    @patch("subprocess.Popen")
-    def test_get_requirements(self, popen):
-        #patching Popen
-        mock = Mock()
-        mock.communicate.return_value = ("Django==1.2\nrequests==0.1",
-                                         "err")
-        #mock.wait.return_value = True
-        mock.returncode.return_value = 0
-
-        popen.return_value = mock
+    @patch("pip.get_installed_distributions")
+    def test_get_requirements(self, pip):
+        #patching pip
+        class Package(object):
+            def __init__(self, key, version):
+                self.key = key
+                self.version = version
+        pip.return_value = ([Package("Django", "1.2"), Package("requests", "0.1")])
 
         from updater.package import get_requirements
         requirements = list(get_requirements())
-        self.assertEqual(requirements, [["Django", "1.2"], ["requests", "0.1"]])
+        self.assertEqual(requirements, [("Django", "1.2"), ("requests", "0.1")])
 
     @patch("updater.package.get_updates")
     def test_run_check(self, get_updates):

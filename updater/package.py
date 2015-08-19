@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
-import subprocess
 from pkg_resources import parse_version
 from piprot import piprot
 from .conf import settings
@@ -11,6 +10,7 @@ import requests
 from django.core.mail.message import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
+import pip
 
 
 def run_check():
@@ -127,11 +127,5 @@ def get_tracked_package(package):
 
 def get_requirements():
 
-    p = subprocess.Popen(['pip', 'freeze'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output, err = p.communicate()
-
-    #if p.returncode != 0:
-    #    return
-
-    for requirement in output.splitlines():
-        yield requirement.split("==")
+    for item in pip.get_installed_distributions():
+        yield item.key, item.version
