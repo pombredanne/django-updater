@@ -3,6 +3,11 @@
 History
 -------
 
+0.1.3 (2015-08-19)
+++++++++++++++++++
+
+* Temporarily fixing piprot issue with pytz
+
 0.1.2 (2015-08-19)
 ++++++++++++++++++
 

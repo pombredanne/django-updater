@@ -103,9 +103,14 @@ def get_package_updates(package, version, tracked_packages):
                     })
 
     if settings.UPDATER_USE_PIPROT:
-        # todo make this more robust, with retries etc.
-        dic["latest_version"], dic["latest_version_date"] = piprot.get_version_and_release_date(package,
+        try:
+            # todo make this more robust, with retries etc.
+            dic["latest_version"], dic["latest_version_date"] = piprot.get_version_and_release_date(package,
                                                                                                 verbose=True)
+        except AttributeError:
+            # until https://github.com/sesh/piprot/issues/48 is resolved
+            pass
+
     return dic
 
 
