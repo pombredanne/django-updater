@@ -46,7 +46,8 @@ def get_updates():
         checked_package = get_package_updates(package, version, tracked_packages, )
         if len(checked_package["security_releases"]) > 0 or checked_package["end_of_life"]:
             dic["security_issues"].append(checked_package)
-        elif settings.UPDATER_USE_PIPROT and checked_package["latest_version"] is not None and parse_version(checked_package["latest_version"]) > parse_version(version):
+        elif settings.UPDATER_USE_PIPROT and checked_package["latest_version"] is not None and \
+                        parse_version(checked_package["latest_version"]) > parse_version(version):
             dic["updates"].append(checked_package)
 
     return dic
