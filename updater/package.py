@@ -43,12 +43,6 @@ def get_updates():
 
     tracked_packages = get_tracked_package_names()
     for package, version in get_requirements():
-        #if package == "Django":
-        #    version = "1.4.2"
-        #if package == "requests":
-        #   version = "0.1"
-        #if package == "sqlparse":
-        #    version = "0.2"
         checked_package = get_package_updates(package, version, tracked_packages, )
         if len(checked_package["security_releases"]) > 0 or checked_package["end_of_life"]:
             dic["security_issues"].append(checked_package)
