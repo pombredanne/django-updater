@@ -59,7 +59,7 @@ Celery
 ------
 
 If you are using `Celery` and have a celery beat daemon running, enable Celery support in your settings with::
-
+     from datetime import timedelta
      CELERYBEAT_SCHEDULE = {
          'run-django-updater': {
              'task': 'updater.tasks.run_check',
