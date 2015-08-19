@@ -1,4 +1,7 @@
 .. image:: https://djangoupdater.com/static/images/logo.png
+    :target: https://djangoupdater.com
+
+------
 
 .. image:: https://badge.fury.io/py/django-updater.png
     :target: https://pypi.python.org/pypi/django-updater
@@ -30,6 +33,14 @@ And run the migrations with::
 
     python manage.py migrate updater
 
+
+Screenshots
+-----------
+.. image:: https://djangoupdater.com/static/images/security_mail.png
+
+------
+
+.. image:: https://djangoupdater.com/static/images/update_mail.png
 
 Usage
 --------
