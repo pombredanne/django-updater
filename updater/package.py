@@ -28,8 +28,10 @@ def run_check():
 
     if notify:
         result["site"] = get_current_site(None)
+        subject = "Important: Security updates on %s" % result["site"] if result["security_issues"] \
+            else "Updates available on %s" % result["site"]
         mail = EmailMultiAlternatives(
-            'subject', render_to_string("summary.txt", result), conf.settings.SERVER_EMAIL, settings.UPDATER_EMAILS)
+            subject, render_to_string("summary.txt", result), conf.settings.SERVER_EMAIL, settings.UPDATER_EMAILS)
         mail.attach_alternative(render_to_string("summary.html", result), 'text/html')
         mail.send(fail_silently=False)
         Notification.objects.create(security_issue=result["security_issues"] != [])
