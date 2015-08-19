@@ -237,7 +237,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'django-updater', u'django-updater Documentation',
-   u'Jannis Gebauer', 'django-updater', 'One line description of project.',
+   u'Jannis Gebauer', 'django-updater', 'Helps you to keep your Django installation up to date.',
    'Miscellaneous'),
 ]
 
