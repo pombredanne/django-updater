@@ -16,7 +16,8 @@ def run_view(request, token):
     if not Token.objects.filter(token=token).exists():
         raise PermissionDenied
 
-    run_check()
+    if not request.GET.get("health"):
+        run_check()
     return HttpResponse("ok")
 
 
