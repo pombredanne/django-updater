@@ -15,4 +15,4 @@ class Command(BaseCommand):
         token = Token.objects.all().first().token
         print("Your token is {token}".format(token=token))
         print("You can use it to call the Django Updater process by visiting: {site}{url}".
-              format(site=get_current_site(None), url=reverse("updater_check", kwargs={"token": token})))
+              format(site=get_current_site(None), url=reverse("updater_run", kwargs={"token": token})))
