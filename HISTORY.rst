@@ -3,6 +3,12 @@
 History
 -------
 
+0.1.6 (2015-09-07)
+++++++++++++++++++
+
+* Added online service registration
+* Fixed minor issues
+
 0.1.5 (2015-08-19)
 ++++++++++++++++++
 
