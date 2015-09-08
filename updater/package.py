@@ -5,12 +5,16 @@ from piprot import piprot
 from .conf import settings
 from django import conf
 from .models import Notification
+from .util import retry_session
 from django.utils import timezone
-import requests
 from django.core.mail.message import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 import pip
+import logging
+from requests.exceptions import RequestException
+
+logger = logging.getLogger(__name__)
 
 
 def run_check():
@@ -46,11 +50,12 @@ def get_updates():
     tracked_packages = get_tracked_package_names()
     for package, version in get_requirements():
         checked_package = get_package_updates(package, version, tracked_packages, )
-        if len(checked_package["security_releases"]) > 0 or checked_package["end_of_life"]:
-            dic["security_issues"].append(checked_package)
-        elif settings.UPDATER_USE_PIPROT and checked_package["latest_version"] is not None and \
+        if checked_package:
+            if len(checked_package["security_releases"]) > 0 or checked_package["end_of_life"]:
+                dic["security_issues"].append(checked_package)
+            elif settings.UPDATER_USE_PIPROT and checked_package["latest_version"] is not None and \
                         parse_version(checked_package["latest_version"]) > parse_version(version):
-            dic["updates"].append(checked_package)
+                dic["updates"].append(checked_package)
 
     return dic
 
@@ -84,6 +89,9 @@ def get_package_updates(package, version, tracked_packages):
         dic["tracked"] = True
         tracked_package = get_tracked_package(package)
 
+        if tracked_package is None:
+            return False
+
         dic["end_of_life"] = _is_eol(version, tracked_package["end_of_life"])
 
         if not dic["end_of_life"]:
@@ -115,16 +123,24 @@ def get_tracked_package_names():
     """
     :return: A list of tracked packages.
     """
-    # todo make this more robust, with retries etc.
-    data = requests.get(settings.UPDATER_TRACKED_PACKAGES_URL)
-    json = data.json()
-    return [p["name"] for p in json]
+    try:
+        data = retry_session().get(settings.UPDATER_TRACKED_PACKAGES_URL)
+        json = data.json()
+        return [p["name"] for p in json]
+    except (ValueError, RequestException) as e:
+        # ValueError is raised if no JSON object could be decoded
+        logger.error("Unable to get tracked package names", exc_info=True)
+        return []
 
 
 def get_tracked_package(package):
-    # todo make this more robust, with retries etc.
-    data = requests.get("{base}{package}/".format(base=settings.UPDATER_TRACKED_PACKAGES_URL, package=package))
-    return data.json()
+    try:
+        data = retry_session().get("{base}{package}/".format(base=settings.UPDATER_TRACKED_PACKAGES_URL, package=package))
+        return data.json()
+    except (ValueError, RequestException) as e:
+        # ValueError is raised if no JSON object could be decoded
+        logger.error("Unable to get tracked package {}".format(package), exc_info=True)
+        return None
 
 
 def get_requirements():
