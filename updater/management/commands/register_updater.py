@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
         # create the view token
         if not Token.objects.all().exists():
-            Token.object.create()
+            Token.objects.create()
 
         token = Token.objects.all().first().token
 
