@@ -2,17 +2,19 @@
 from __future__ import absolute_import, print_function, unicode_literals
 from pkg_resources import parse_version
 from piprot import piprot
-from .conf import settings
+import pip
+import logging
+from requests.exceptions import RequestException
+
 from django import conf
-from .models import Notification
-from .util import retry_session
 from django.utils import timezone
 from django.core.mail.message import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
-import pip
-import logging
-from requests.exceptions import RequestException
+
+from .conf import settings
+from .models import Notification
+from .util import retry_session
 
 logger = logging.getLogger(__name__)
 
