@@ -6,15 +6,12 @@ import pip
 import logging
 from requests.exceptions import RequestException
 
-from django import conf
 from django.utils import timezone
-from django.core.mail.message import EmailMultiAlternatives
-from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 
 from .conf import settings
 from .models import Notification
-from .util import retry_session
+from .util import retry_session, send_notification
 
 logger = logging.getLogger(__name__)
 
@@ -34,12 +31,7 @@ def run_check():
 
     if notify:
         result["site"] = get_current_site(None)
-        subject = "Important: Security updates on %s" % result["site"] if result["security_issues"] \
-            else "Updates available on %s" % result["site"]
-        mail = EmailMultiAlternatives(
-            subject, render_to_string("summary.txt", result), conf.settings.SERVER_EMAIL, settings.UPDATER_EMAILS)
-        mail.attach_alternative(render_to_string("summary.html", result), 'text/html')
-        mail.send(fail_silently=False)
+        send_notification(result)
         Notification.objects.create(security_issue=result["security_issues"] != [])
     return notify
 

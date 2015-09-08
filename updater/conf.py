@@ -14,5 +14,6 @@ class Settings(BaseSettings):
     UPDATER_NOTIFY_ON_UPDATES = getattr(django_settings, "UPDATER_NOTIFY_ON_UPDATES", True)
     UPDATER_EMAILS = getattr(django_settings, "UPDATER_EMAILS", [mail for name, mail in django_settings.ADMINS])
     UPDATER_TOKEN = getattr(django_settings, "UPDATER_TOKEN", False)
+    UPDATER_USE_NOTIFICATION_SERVICE = getattr(django_settings, "UPDATER_USE_NOTIFICATION_SERVICE", False)
 
 settings = Settings()
