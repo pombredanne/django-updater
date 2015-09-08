@@ -17,7 +17,11 @@ logger = logging.getLogger(__name__)
 
 
 def run_check(site=None):
-
+    """
+    Main entrypoint for all update checks. Fetches issues and updates and decides if a notification is sent.
+    :param site: (Optional) Site ID
+    :return: True, if a notifaction has been sent. False otherwise
+    """
     result = get_updates()
     notify = False
     if result["security_issues"]:
@@ -36,9 +40,10 @@ def run_check(site=None):
     return notify
 
 
-
 def get_updates():
-
+    """
+    :return: Dictionary containing all information about all installed packages
+    """
     dic = {"security_issues": [], "updates": []}
 
     tracked_packages = get_tracked_package_names()
@@ -74,7 +79,12 @@ def _is_eol(version, end_of_life):
 
 
 def get_package_updates(package, version, tracked_packages):
-
+    """
+    :param package: String package name
+    :param version: String package version
+    :param tracked_packages: List of tracked packages
+    :return: Dictionary
+    """
     dic = {"used_version": version, "security_releases": [], "tracked": False, "latest_version": None,
            "latest_version_date": None, "package": package, "end_of_life": None}
 
@@ -115,6 +125,7 @@ def get_package_updates(package, version, tracked_packages):
 
 def get_tracked_package_names():
     """
+    Queries the Django Updater API and returns a list of tracked packages
     :return: A list of tracked packages.
     """
     try:
@@ -128,6 +139,11 @@ def get_tracked_package_names():
 
 
 def get_tracked_package(package):
+    """
+    Queries the Django Updater API for a specific package
+    :param package: String name of package
+    :return: Dictionary containing all known security issues for the package, or None
+    """
     try:
         data = retry_session().get("{base}{package}/".format(base=settings.UPDATER_TRACKED_PACKAGES_URL, package=package))
         return data.json()
@@ -138,6 +154,8 @@ def get_tracked_package(package):
 
 
 def get_requirements():
-
+    """
+    :return: Iterator that return a tuple of the form (package_name, version)
+    """
     for item in pip.get_installed_distributions():
         yield item.key, item.version
