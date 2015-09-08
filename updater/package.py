@@ -16,7 +16,7 @@ from .util import retry_session, send_notification
 logger = logging.getLogger(__name__)
 
 
-def run_check():
+def run_check(site=None):
 
     result = get_updates()
     notify = False
@@ -31,7 +31,7 @@ def run_check():
 
     if notify:
         result["site"] = get_current_site(None)
-        send_notification(result)
+        send_notification(result, site)
         Notification.objects.create(security_issue=result["security_issues"] != [])
     return notify
 
