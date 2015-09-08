@@ -3,6 +3,13 @@
 History
 -------
 
+0.1.7 (2015-09-08)
+++++++++++++++++++
+
+* Added notification service
+* Added inline documentation
+* Small refactorings
+
 0.1.6 (2015-09-07)
 ++++++++++++++++++
 
