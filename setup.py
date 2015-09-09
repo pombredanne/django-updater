@@ -41,7 +41,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "django",
-        "piprot",
+        "requests",
         "pip"
     ],
     license="BSD",
