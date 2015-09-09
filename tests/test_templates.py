@@ -22,11 +22,11 @@ class PackageTestCase(TestCase):
         # #############
         # Two security updates (none EOL)
         # #############
-        result = {"security_issues": [
-            {"package": "Django", "used_version": "1.3", "tracked": True, "latest_version": None,
+        result = {"security": [
+            {"package": "Django", "used_version": "1.3",  "latest_version": None,
              "latest_version_date": None, "end_of_life": False, "security_releases": [
                 {"fixes": ["django_security_fix",], "version": "1.3.2", "url": "django_url"}]},
-            {"package": "requests", "used_version": "0.1", "tracked": True, "latest_version": None,
+            {"package": "requests", "used_version": "0.1",  "latest_version": None,
              "latest_version_date": None, "end_of_life": False, "security_releases": [
                 {"fixes": ["requests_security_fix",], "version": "1.4", "url": "requests_url"}]}
         ], "updates": []}
@@ -52,10 +52,10 @@ class PackageTestCase(TestCase):
         # #############
         # Two security updates (Django EOL)
         # #############
-        result = {"security_issues": [
-            {"package": "Django", "used_version": "1.2", "tracked": True, "latest_version": None,
+        result = {"security": [
+            {"package": "Django", "used_version": "1.2",  "latest_version": None,
              "latest_version_date": None, "end_of_life": True, "security_releases": []},
-            {"package": "requests", "used_version": "0.1", "tracked": True, "latest_version": None,
+            {"package": "requests", "used_version": "0.1",  "latest_version": None,
              "latest_version_date": None, "end_of_life": False, "security_releases": [
                 {"fixes": ["requests_security_fix",], "version": "1.4", "url": "requests_url"}]}
         ], "updates": []}

@@ -1,6 +1,6 @@
 
 ***********************************************************
-*               Security Issues                           * {% for package in security_issues %}
+*               Security Issues                           * {% for package in security %}
 ***********************************************************
 Package: {{ package.package }}
 Used Version: {{ package.used_version }}
