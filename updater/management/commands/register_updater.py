@@ -65,16 +65,16 @@ class Command(BaseCommand):
 def hit_updater_view(domain, token):
     base_url = "{site}{url}".format(site=domain, url=reverse("updater_run", kwargs={"token": token}))
     http_url, https_url = "://".join(["http", base_url]), "://".join(["https", base_url])
-    if is_reachable_url(http_url + "?health=1"):
-        return http_url
-    elif is_reachable_url(https_url + "?health=1"):
+    if is_reachable_url(https_url + "?health=1"):
         return https_url
+    elif is_reachable_url(http_url + "?health=1"):
+        return http_url
     return False
 
 
 def is_reachable_url(url):
     try:
-        r = requests.get(url=url)
+        r = requests.get(url=url, timeout=2.0)
         if r.status_code == 200:
             return True
     except RequestException as e:
