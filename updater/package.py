@@ -49,7 +49,7 @@ def get_updates(token=None):
         headers["Authorization"] = "Token " + settings.UPDATER_TOKEN
 
     data = {"packages": get_packages(), "token": token}
-    r = requests.post("https://djangoupdater.com/api/v1/packages/", data=data, headers=headers)
+    r = requests.post("https://djangoupdater.com/api/v1/packages/", json=data, headers=headers)
     return r.json()
 
 
