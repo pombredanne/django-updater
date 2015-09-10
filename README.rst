@@ -1,3 +1,8 @@
+WARNING
+-------
+
+This repo is currently a work in progress and may break with every release. Don't rely on it for now.
+
 .. image:: https://djangoupdater.com/static/images/logo.png
     :target: https://djangoupdater.com
 
