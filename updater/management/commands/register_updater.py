@@ -52,7 +52,7 @@ class Command(BaseCommand):
 
         data = {"name": domain, "url": url}
         headers = {"Authorization": "Token " + updater_token}
-        r = requests.post("https://djangoupdater.com/api/v1/sites/", data=data, headers=headers)
+        r = requests.post(settings.UPDATER_BASE_URL + "/api/v1/sites/", data=data, headers=headers)
         if r.status_code != 201:
             self.stdout.write("There was an error adding this site")
             self.stdout.write(r.text)
