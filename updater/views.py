@@ -17,7 +17,7 @@ def run_view(request, token):
         raise PermissionDenied
 
     if not request.GET.get("health", False):
-        run_check(token=token)
+        run_check(token=request.GET.get("ntoken", None))
     return HttpResponse("ok")
 
 
