@@ -5,9 +5,27 @@ from uuid import uuid4
 from django.utils import timezone
 
 
-class Token(models.Model):
+class StatusManager(models.Manager):
+    """
+    Singleton Manager implementation
+    """
 
-    token = models.CharField(max_length=36, default=uuid4)
+    def get(self):
+        return self.get_or_create(pk=1)[0]
+
+
+class Status(models.Model):
+    """
+    Holds the settings/status of the current installation
+    """
+
+    registered = models.BooleanField(default=False)
+    site_token = models.CharField(max_length=36, default=uuid4)
+    objects = StatusManager()
+
+    class Meta:
+        verbose_name = "Status"
+        verbose_name_plural = "Status"
 
 
 class Notification(models.Model):
