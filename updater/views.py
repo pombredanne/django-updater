@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
-from .models import Token
+from .models import Status
 from django.core.exceptions import PermissionDenied
 from .conf import settings
 from django.http import HttpResponse
 from .package import run_check
-from django.core.exceptions import ImproperlyConfigured
 
 
 def run_view(request, token):
@@ -13,7 +12,7 @@ def run_view(request, token):
     if not is_allowed_domain(request) or not is_allowed_ip(request):
         raise PermissionDenied
 
-    if not Token.objects.filter(token=token).exists():
+    if not Status.objects.filter(site_token=token).exists():
         raise PermissionDenied
 
     if not request.GET.get("health", False):
