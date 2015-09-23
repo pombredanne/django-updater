@@ -19,7 +19,7 @@ class ViewTestCase(TestCase):
 
     @patch("updater.package.run_check")
     def test_run_view(self, run_check):
-        from updater.models import Token
+        from updater.models import Status
         from updater.conf import Settings
         UPDATER_ALLOWED_DOMAINS = ["*"]
 
@@ -28,7 +28,11 @@ class ViewTestCase(TestCase):
         self.assertEquals(403, response.status_code)
 
         # token exists
-        Token.objects.create(token="11111111-2222-3333-4444-555555555555")
+        status = Status.objects.get()
+
+        status.site_token = "11111111-2222-3333-4444-555555555555"
+        status.save()
+
         run_check.return_value = True
         response = self.client.get(reverse("updater_run", kwargs={"token": "11111111-2222-3333-4444-555555555555"}))
         self.assertEquals(200, response.status_code)
