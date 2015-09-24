@@ -3,6 +3,13 @@
 History
 -------
 
+0.2.2 (2015-09-24)
+++++++++++++++++++
+
+* Refactored models
+* Added admin page
+* Reworked registration process
+
 0.2.1 (2015-09-14)
 ++++++++++++++++++
 
