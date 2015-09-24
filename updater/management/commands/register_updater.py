@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 from django.core.management.base import BaseCommand
-from django.core.urlresolvers import reverse
-from ...models import Token
+from ...models import Status
+from ...register import check_domain, register_site
 from updater.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-import requests
-from requests.exceptions import RequestException
 import sys
 
 
@@ -21,18 +19,14 @@ class Command(BaseCommand):
             self.stdout.write("whoop, need token")
             return
 
-        # create the view token
-        if not Token.objects.all().exists():
-            Token.objects.create()
-
-        token = Token.objects.all().first().token
+        status = Status.objects.get()
 
         updater_token = options["token"] or settings.UPDATER_TOKEN
 
         # building urls
         domain = get_current_site(None)
 
-        url = hit_updater_view(domain, token=token)
+        url = check_domain(domain, token=status.site_token)
 
         if not url:
             self.stdout.write("Unable to find the correct domain name for this installation, tried {0}".format(domain))
@@ -43,43 +37,12 @@ class Command(BaseCommand):
                 domain = get_input("Domain: ")
             except KeyboardInterrupt:
                 return
-            url = hit_updater_view(domain=domain, token=token)
-
-        base_url = url.split("/updater/")[0]
-        self.stdout.write("This site is reachable at {base}".format(base=base_url))
+            url = check_domain(domain=domain, token=status.site_token)
 
         self.stdout.write("Contacting online service to register this site.")
+        success, msg = register_site(domain, url, updater_token)
+        self.stdout.write(msg)
 
-        data = {"name": domain, "url": url}
-        headers = {"Authorization": "Token " + updater_token}
-        r = requests.post(settings.UPDATER_BASE_URL + "/api/v1/sites/", data=data, headers=headers)
-        if r.status_code != 201:
-            self.stdout.write("There was an error adding this site")
-            self.stdout.write(r.text)
-            return
-
-        self.stdout.write("This site is now registered at djangoupdater.com")
-        self.stdout.write("All went well!")
-
-
-def hit_updater_view(domain, token):
-    base_url = "{site}{url}".format(site=domain, url=reverse("updater_run", kwargs={"token": token}))
-    http_url, https_url = "://".join(["http", base_url]), "://".join(["https", base_url])
-    if is_reachable_url(https_url + "?health=1"):
-        return https_url
-    elif is_reachable_url(http_url + "?health=1"):
-        return http_url
-    return False
-
-
-def is_reachable_url(url):
-    try:
-        r = requests.get(url=url, timeout=2.0)
-        if r.status_code == 200:
-            return True
-    except RequestException as e:
-        pass
-    return False
 
 def get_input(prompt):
     # py2 and py3 compatible input prompt
