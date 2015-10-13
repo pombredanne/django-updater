@@ -86,7 +86,8 @@ background-color: #f6f6f6;
 					</tr>
                     {% elif updates %}
                     <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="alert alert-warning" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #04abff; margin: 0; padding: 20px;" align="center" bgcolor="#FF9F00" valign="top">
-							There are {{ updates|length }} updates available on {{ site }}
+							There {% if updates|length == 1 %}is{% else %}are{% endif %} {{ updates|length }} {% if updates|length == 1 %}update{% else %}updates{% endif %} available on {{ site }}
+
 						</td>
 					</tr>
                     {% endif %}
