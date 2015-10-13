@@ -1,0 +1,26 @@
+{% load static %}
+
+{% if errors %}
+    <p>
+        <b>Error</b> {{ status|safe }}
+    </p>
+{% else %}
+
+    <p>
+        <b>Registered</b> <img src="{% static "admin/img/icon-yes.gif" %}" alt="True"><br/>
+        <b>Name</b> {{ status.name }}<br/>
+        <b>Active</b>
+        {% if status.active %}
+            <img src="{% static "admin/img/icon-yes.gif" %}" alt="True">
+        {% else %}
+            <img src="{% static "admin/img/icon-no.gif" %}" alt="True">
+        {% endif %}<br/>
+        <b>Last check</b>
+        {% if status.checked %}
+            {{ checked }}
+        {% else %}
+            <em>never</em>
+        {% endif %}<br/>
+    </p>
+
+{% endif %}

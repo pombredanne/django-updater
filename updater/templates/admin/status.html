@@ -2,50 +2,85 @@
 {% load i18n static %}
 
 {% block breadcrumbs %}
-<div class="breadcrumbs">
-<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
-&rsaquo; {{ opts.verbose_name_plural|capfirst }}
-</div>
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+        &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+        &rsaquo; {{ opts.verbose_name_plural|capfirst }}
+    </div>
 {% endblock %}
 
 {% block content %}
-<h1>{% trans "Django Updater Status" %}</h1>
-{% if token %}
-    {% if status.registered %}
-        <p id="online-status">Checking status online <img src="{% static "updater/ajax-loader.gif" %}"/> </p>
-    {% else %}
-        <p></p>
-    {% endif %}
+    <h1>{% trans "Django Updater Status" %}</h1>
+    <h2>Registration</h2>
+    <div id="status">
+        <p>
+            Checking registration status <img src="{% static "updater/ajax-loader.gif" %}"/>
+        </p>
+    </div>
 
-{% else %}
-    <p>Please add your token to <code>settings.py</code></p>
-{% endif %}
-
+    <div id="updates" style="display: none;">
+        <h2>Updates</h2>
+        <div id="updates-inner">
+            <p>
+                Getting updates <img src="{% static "updater/ajax-loader.gif" %}"/>
+            </p>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extrahead %}
     {% for js_file in js %}
-    <script type="text/javascript" src="{{ js_file }}"></script>
+        <script type="text/javascript" src="{{ js_file }}"></script>
     {% endfor %}
     <script type="text/javascript">
-    (function($) {
-        $(document).ready(function(){
-           if(document.getElementById("online-status")){
-               $.ajax({
-               url: '{{ service_url }}',
-               beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Token {{ token }}');},
-               error: function() {
-                  $('#online-status').html('<p>An error has occurred</p>');
-               },
-               success: function(data) {
-                   console.log(data);
-                  $('#online-status').html(JSON.stringify(data));
-               },
-               type: 'GET'
+        (function ($) {
+            $(document).ready(function () {
+                getRegistrationStatus();
             });
-           }
-        });
-    })(django.jQuery);
-</script>
+
+            function getRegistrationStatus(){
+                $.ajax({
+                    url: '{{ registration_url }}',
+                    error: function(data){
+                        $("#status").html("<strong>Error</strong> An unknown error occurred.")
+                    },
+                    success: function(data){
+                        $("#status").html(data.content);
+                        if(!data.errors) {
+                            getUpdates();
+                        }
+                    }
+                })
+            }
+
+            function getUpdates() {
+                $("#updates").show();
+                var data = {
+                    "packages": {{ packages|safe }},
+                    "django_web_view": true
+                };
+                $.ajax({
+                    url: '{{ update_url }}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(data),
+                    type: 'POST',
+
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Token {{ token }}');
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        $('#updates-inner').html('An unknown error occurred');
+                    },
+                    success: function (data) {
+                        console.log(data);
+
+                        $('#updates-inner').html(data.django_web_view);
+                    }
+
+                });
+            }
+        })(django.jQuery);
+    </script>
 {% endblock %}
