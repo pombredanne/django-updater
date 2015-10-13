@@ -22,7 +22,6 @@ def check_host(host, token, proto=None):
 
 
 def register_site(host, base_url):
-    print("REGISTER WITH", base_url)
     status = Status.objects.get()
 
     data = {"name": host, "base_url": base_url}
