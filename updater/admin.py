@@ -84,14 +84,14 @@ class StatusAdmin(admin.ModelAdmin):
 
         if not status.registered:
             # site is not registered, do that now
-            return self.get_status(request, retries=retries + 1, reg_msg=self.register(request))
+            return self.get_registration_status(request, retries=retries + 1, reg_msg=self.register(request))
 
         # site is registered, get the status
         success, data = get_site_status(settings.UPDATER_TOKEN, status.site_token)
 
         if not success and data == 404:
             # site does not exist, re-register
-            return self.get_status(request, retries=retries + 1, reg_msg=self.register(request))
+            return self.get_registration_status(request, retries=retries + 1, reg_msg=self.register(request))
         elif not success and data == 403:
             # UPDATER_TOKEN is not good
             return {"errors": True, "status": "Your token <code>{token}</code> is invalid.<br/>"
